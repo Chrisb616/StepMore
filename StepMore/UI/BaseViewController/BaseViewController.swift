@@ -17,9 +17,13 @@ class BaseViewController: UIViewController {
     
     @IBOutlet weak var ballContainer: UIView!
     
-    static var fromNib: BaseViewController { return BaseViewController(nibName: "BaseViewController", bundle: nil) }
+    static func fromNib(withSucceedingViewController succeedingViewController: UIViewController) -> BaseViewController {
+        let baseViewController = BaseViewController(nibName: "BaseViewController", bundle: nil)
+        baseViewController.succeedingViewController = succeedingViewController
+        return baseViewController
+    }
 
-    //let healthKitManager = HealthKitManager.instance
+    var succeedingViewController: UIViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +34,8 @@ class BaseViewController: UIViewController {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { (timer) in
             
             self.start {
-                //let menu = MenuViewController.initFromNib
                 
-                //self.present(menu, animated: false, completion: nil)
+                self.present(self.succeedingViewController, animated: false, completion: nil)
             }
         }
     }
