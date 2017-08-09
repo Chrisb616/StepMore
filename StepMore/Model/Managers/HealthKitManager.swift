@@ -8,6 +8,7 @@
 
 import HealthKit
 
+/*
 class HealthKitManager {
     
     private init() {}
@@ -89,9 +90,9 @@ class HealthKitManager {
         healthStore.execute(query)
     }
     
-    //MARK: - Major single sample queries
+    //MARK: - Daily sample queries
     
-    func todaySingleSampleQuery(completion: @escaping (StepSample)->Void) {
+    func todayDailySampleQuery(completion: @escaping (StepSample)->Void) {
         let today = Date().entireDay
         
         singleSampleForRange(from: today.start, to: today.end) { (sample, error) in
@@ -148,7 +149,7 @@ class HealthKitManager {
     
     func thisWeekDailySampleQueries(completion: @escaping ([StepSample])->Void) {
         dailySampleQueries(startDate: Date(), endCondition: { (date) -> Bool in
-            return date.Weekday == UserOptions.instance.startOfWeek
+            return date.weekday == UserOptions.instance.startOfWeek
         }) { (samples) in
             completion(samples)
         }
@@ -188,26 +189,41 @@ class HealthKitManager {
         }
     }
     
-    //MARK: - Average Sample Queries
+    //MARK: - Total and Average Sample Queries
     
-    func averageSample(samples: [StepSample]) -> StepSample {
+    func totalAndAverageSamples(samples: [StepSample], ignoreEmpty: Bool = false) -> (total: StepSample, average: StepSample) {
         
-        var sum = 0
+        var total = 0
+        var count = 0
         var startDate = Date()
         var endDate = Date()
         
         samples.forEach{
-            sum += $0.amount
-            if startDate < $0.startDate { startDate = $0.startDate }
-            if endDate > $0.endDate { endDate = $0.endDate }
+            if $0.amount >= 0 || !ignoreEmpty {
+                total += $0.amount
+                count += 1
+                if startDate < $0.startDate { startDate = $0.startDate }
+                if endDate > $0.endDate { endDate = $0.endDate }
+            }
         }
         
-        let average = sum / samples.count
+        let average = total / count
         
-        return StepSample(amount: average, startDate: startDate, endDate: endDate)
+        let averageSample = StepSample(amount: average, startDate: startDate, endDate: endDate)
+        let totalSample = StepSample(amount: total, startDate: startDate, endDate: endDate)
         
+        return (total: totalSample, average: averageSample)
     }
     
+    func thisWeekSampleQuery(totalCompletion: @escaping (Int) -> Void, averageCompletion: @escaping (Int) -> Void) {
+        thisWeekDailySampleQueries { (samples) in
+            let totalAndAverage = self.totalAndAverageSamples(samples: samples)
+            
+            totalCompletion(totalAndAverage.total.amount)
+            averageCompletion(totalAndAverage.average.amount)
+        }
+    }
+    /*
     func thisWeekAverageSampleQuery(completion: @escaping (StepSample)->Void) {
         thisWeekDailySampleQueries { (samples) in
             completion(self.averageSample(samples: samples))
@@ -243,4 +259,6 @@ class HealthKitManager {
             completion(self.averageSample(samples: samples))
         }
     }
+ */
 }
+ */

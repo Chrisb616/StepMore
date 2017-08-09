@@ -21,6 +21,7 @@
             <connections>
                 <outlet property="allTimeButton" destination="ddO-X4-Q9l" id="HwL-Lj-eRZ"/>
                 <outlet property="allTimeCountLabel" destination="VET-k7-k3i" id="oSW-NK-Ncb"/>
+                <outlet property="refreshButton" destination="7Mx-U2-Bf8" id="GGD-pL-6mU"/>
                 <outlet property="sevenDayButton" destination="CLf-wE-fLD" id="npm-f8-lnm"/>
                 <outlet property="sevenDayCountLabel" destination="Hwf-q8-8ar" id="NsJ-nD-4iR"/>
                 <outlet property="thirtyDayButton" destination="bg6-rF-t0g" id="h3N-Y5-4E0"/>
@@ -253,6 +254,14 @@
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Mx-U2-Bf8">
+                    <rect key="frame" x="265" y="30" width="35" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="35" id="6FI-0m-PIw"/>
+                        <constraint firstAttribute="width" secondItem="7Mx-U2-Bf8" secondAttribute="height" multiplier="1:1" id="xYy-cm-8WN"/>
+                    </constraints>
+                    <state key="normal" image="Refresh"/>
+                </button>
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -278,9 +287,11 @@
                 <constraint firstItem="JaQ-BD-bpa" firstAttribute="leading" secondItem="Xrc-Ue-Err" secondAttribute="leading" constant="10" id="FaP-R8-UMh"/>
                 <constraint firstItem="Vgt-QG-AjM" firstAttribute="top" secondItem="iUG-YV-jei" secondAttribute="top" constant="10" id="Fu3-JY-MVb"/>
                 <constraint firstItem="2bw-U3-3ro" firstAttribute="top" secondItem="Xrc-Ue-Err" secondAttribute="bottom" constant="6" id="GVf-MZ-VKe"/>
+                <constraint firstAttribute="trailing" secondItem="7Mx-U2-Bf8" secondAttribute="trailing" constant="20" id="Gsg-Sa-czC"/>
                 <constraint firstItem="CLf-wE-fLD" firstAttribute="leading" secondItem="iUG-YV-jei" secondAttribute="leading" id="IbV-Q2-aAf"/>
                 <constraint firstItem="ifR-dc-i6G" firstAttribute="leading" secondItem="zdB-X0-dsI" secondAttribute="leading" constant="7" id="JhP-Jv-xJy"/>
                 <constraint firstItem="ifR-dc-i6G" firstAttribute="baseline" secondItem="1co-hN-eAH" secondAttribute="baseline" id="KCH-tH-Z50"/>
+                <constraint firstItem="7Mx-U2-Bf8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="30" id="KGa-JV-idV"/>
                 <constraint firstItem="8ur-am-sHx" firstAttribute="height" secondItem="Vgt-QG-AjM" secondAttribute="height" id="NQ0-fE-ZNn"/>
                 <constraint firstItem="gqI-Ee-AeV" firstAttribute="leading" secondItem="Xrc-Ue-Err" secondAttribute="leading" constant="10" id="Nuy-ey-wae"/>
                 <constraint firstItem="Vgt-QG-AjM" firstAttribute="trailing" secondItem="iUG-YV-jei" secondAttribute="trailing" constant="-10" id="QEl-ph-jIP"/>
@@ -328,7 +339,12 @@
                 <constraint firstItem="8ur-am-sHx" firstAttribute="trailing" secondItem="2bw-U3-3ro" secondAttribute="trailing" constant="-10" id="zYU-gz-Hbw"/>
                 <constraint firstItem="Xrc-Ue-Err" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="ztH-M8-Gx2"/>
             </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
             <point key="canvasLocation" x="34" y="54"/>
         </view>
     </objects>
+    <resources>
+        <image name="Refresh" width="50" height="50"/>
+    </resources>
 </document>

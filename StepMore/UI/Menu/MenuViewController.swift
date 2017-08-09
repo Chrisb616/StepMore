@@ -10,6 +10,7 @@ import UIKit
 
 class MenuViewController: UIViewController {
     
+    //MARK: - Outlets
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var todayButton: UIButton!
@@ -38,29 +39,54 @@ class MenuViewController: UIViewController {
     @IBOutlet weak var allTimeButton: UIButton!
     @IBOutlet weak var allTimeCountLabel: UILabel!
     
+    @IBOutlet weak var refreshButton: UIButton!
+    
+    //MARK: - Other UI Properties
     var fadeView: UIView!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    //MARK: - ViewModel
+    var viewModel: MenuViewModel
+    
+    //MARK: - Initialization
     static var fromNib: MenuViewController {
         let vc = MenuViewController.init(nibName: "MenuViewController", bundle: nil)
         
         return vc
     }
-
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.viewModel = MenuViewModel()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         formatLabels()
         formatButtons()
+        formatFadeView()
         
-        formateFadeView()
-        hideAllCountLabels()
-        populateCountLabels()
+        NotificationManager.instance.addViewModelUpdateObserver(for: viewModel, observer: self, selector: #selector(update))
+        viewModel.reset()
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         activateFadeView()
     }
     
-    func formateFadeView() {
+    //MARK: View Formatting
+    func formatFadeView() {
         
         fadeView = UIView()
         
@@ -68,12 +94,6 @@ class MenuViewController: UIViewController {
         
         fadeView.frame = UIScreen.main.bounds
         fadeView.backgroundColor = UIColor.white
-    }
-    
-    func activateFadeView() {
-        UIView.animate(withDuration: 1) {
-            self.fadeView.alpha = 0
-        }
     }
     
     func formatLabels() {
@@ -93,11 +113,25 @@ class MenuViewController: UIViewController {
     }
     
     private func formatSingleButton(_ button: UIButton) {
-        
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 5
-        
+    }
+    
+    //MARK: Notification Set up
+    
+    func activateFadeView() {
+        UIView.animate(withDuration: 1) {
+            self.fadeView.alpha = 0
+        }
+    }
+    
+    @objc private func update(_ sender: Any) {
+        OperationQueue.main.addOperation {
+            if let todayCount = self.viewModel.todayCount {
+                self.todayCountLabel.text = todayCount.asString
+            }
+        }
     }
     
     func hideAllCountLabels() {
@@ -109,59 +143,6 @@ class MenuViewController: UIViewController {
         sevenDayCountLabel.isHidden = true
         thirtyDayCountLabel.isHidden = true
         threeHundredSixtyFiveDayCountLabel.isHidden = true
-    }
-    
-    func populateCountLabels() {
-        
-        HealthKitManager.instance.todaySingleSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.todayCountLabel.text = sample.amount.asString
-                self.todayCountLabel.isHidden = false
-            }
-        }
-        
-        HealthKitManager.instance.thisWeekAverageSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.thisWeekCountLabel.text = sample.amount.asString
-                self.thisWeekCountLabel.isHidden = false
-            }
-        }
-        
-        HealthKitManager.instance.thisMonthAverageSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.thisMonthCountLabel.text = sample.amount.asString
-                self.thisMonthCountLabel.isHidden = false
-            }
-        }
-        
-        HealthKitManager.instance.thisYearAverageSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.thisYearCountLabel.text = sample.amount.asString
-                self.thisYearCountLabel.isHidden = false
-            }
-        }
-        
-        HealthKitManager.instance.sevenDayAverageSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.sevenDayCountLabel.text = sample.amount.asString
-                self.sevenDayCountLabel.isHidden = false
-            }
-        }
-        
-        HealthKitManager.instance.thirtyDayAverageSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.thirtyDayCountLabel.text = sample.amount.asString
-                self.thirtyDayCountLabel.isHidden = false
-            }
-        }
-        
-        HealthKitManager.instance.threeHundredSixtyFiveDayAverageSampleQuery { (sample) in
-            OperationQueue.main.addOperation {
-                self.threeHundredSixtyFiveDayCountLabel.text = sample.amount.asString
-                self.threeHundredSixtyFiveDayCountLabel.isHidden = false
-            }
-        }
-        
     }
     
 }
